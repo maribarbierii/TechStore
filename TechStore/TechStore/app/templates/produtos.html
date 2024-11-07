@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ produto.nome }}</title>
+    <style>
+        /* Estilos principais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        /* Produto e layout */
+        .produto-detalhe {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px auto;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .produto-imagem {
+            flex: 1;
+            padding-right: 20px;
+            position: relative;
+        }
+        .produto-imagem img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .produto-info {
+            flex: 2;
+            padding-left: 20px;
+        }
+        .produto-info h1 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2a5934;
+            margin-bottom: 10px;
+        }
+        .produto-info p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .preco {
+            font-size: 24px;
+            color: #d9534f;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .botao-adicionar {
+            display: inline-block;
+            background-color: #5cb85c;
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+        .botao-adicionar:hover {
+            background-color: #4cae4c;
+        }
+        .botao-voltar {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #a8d5ba;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .botao-voltar:hover {
+            background-color: #8fbf9f;
+        }
+        /* Comentários e formulário */
+        #comentarios {
+            margin-top: 30px;
+        }
+        .comentario {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        #comentario-form {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #comentario-form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        #comentario-form button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #comentario-form button:hover {
+            background-color: #4cae4c;
+        }
+        /* Estilo das estrelas de avaliação */
+        .estrelas {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .estrela {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .estrela.selecionada,
+        .estrela:hover,
+        .estrela:hover ~ .estrela {
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Produto e informações -->
+    <div class="produto-detalhe">
+        <div class="produto-imagem">
+            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+        </div>
+
+        <div class="produto-info">
+            <h1>{{ produto.nome }}</h1>
+            <p>{{ produto.descricao }}</p>
+            <p class="preco">R$ {{ produto.preco }}</p>
+            <a href="#" class="botao-adicionar">Adicionar ao carrinho</a>
+        </div>
+    </div>
+
+    <!-- Comentários e formulário de avaliação -->
+    <div id="comentarios">
+        <h2>Comentários</h2>
+        {% for comentario in comentarios %}
+            <div class="comentario">
+                <strong>{{ comentario.usuario.username }}</strong> - 
+                <span>{{ comentario.data_comentario|date:"d/m/Y H:i" }}</span>
+                <p>{{ comentario.comentario }}</p>
+                <p><strong>Nota:</strong> {{ comentario.nota }}</p>
+            </div>
+        {% empty %}
+            <p>Não há comentários ainda para este produto.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Formulário para novos comentários com estrelas interativas -->
+    <form id="comentario-form" method="POST" action="{% url 'produto_detalhes' produto.id %}">
+        {% csrf_token %}
+        <h3>Deixe seu comentário:</h3>
+        <textarea id="comentario-texto" name="comentario" placeholder="Digite seu comentário" required></textarea>
+        
+        <div class="estrelas">
+            <span class="estrela" data-valor="1">&#9733;</span>
+            <span class="estrela" data-valor="2">&#9733;</span>
+            <span class="estrela" data-valor="3">&#9733;</span>
+            <span class="estrela" data-valor="4">&#9733;</span>
+            <span class="estrela" data-valor="5">&#9733;</span>
+        </div>
+        
+        <input type="hidden" id="nota-input" name="nota" required>
+        
+        <button type="submit">Enviar Comentário</button>
+    </form>
+
+    <a href="{% url 'index' %}" class="botao-voltar">Voltar à página inicial</a>
+
+    <!-- JavaScript para interatividade das estrelas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const estrelas = document.querySelectorAll('.estrela');
+    const notaInput = document.getElementById('nota-input');
+
+    // Função para atualizar visualmente as estrelas selecionadas
+    function atualizarEstrelas(valor) {
+        estrelas.forEach((estrela, index) => {
+            estrela.classList.toggle('selecionada', index < valor);
+        });
+    }
+
+    estrelas.forEach((estrela, index) => {
+        estrela.addEventListener('click', function() {
+            const valor = index + 1;  
+            notaInput.value = valor;
+            atualizarEstrelas(valor);
+        });
+
+        estrela.addEventListener('mouseover', function() {
+            atualizarEstrelas(index + 1);
+        });
+
+        estrela.addEventListener('mouseout', function() {
+            atualizarEstrelas(notaInput.value);
+        });
+    });
+});
+    </script>
+
+</body>
+</html>

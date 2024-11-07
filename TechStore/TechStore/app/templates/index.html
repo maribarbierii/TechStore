@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Produtos</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9f9ea; /* verde claro, quase branco */
+            color: #2a5934; /* verde escuro para o texto */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Barra de navegação */
+        nav {
+            background-color: #a8d5ba; /* verde claro, mais escuro que o fundo */
+            padding: 15px 20px; /* Barra de navegação mais grossa */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 10;
+            box-sizing: border-box; /* Garantir que o padding não afete a largura */
+        }
+
+        /* Nome da loja à esquerda */
+        .logo {
+            font-size: 24px;
+            color: #2a5934; /* verde escuro */
+            font-weight: bold;
+            flex-shrink: 0; /* Impede que a logo encolha */
+        }
+
+        /* Menu de navegação no centro */
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Coloca o menu no centro */
+            flex-grow: 1;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: #808080; /* cinza para os itens do menu */
+            text-decoration: none; /* Remove sublinhado por padrão */
+            font-size: 14px; /* texto menor */
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: none; /* Remove o sublinhado no hover */
+        }
+
+        /* Área de busca e carrinho à direita */
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end; /* Alinha à direita */
+            flex-shrink: 0; /* Impede que a área do carrinho encolha */
+        }
+
+        .nav-right a {
+            color: #808080; /* cinza para os itens de buscar e carrinho */
+            font-size: 14px; /* texto menor */
+        }
+
+        .nav-right a:hover {
+            text-decoration: none; /* Remove o sublinhado no hover */
+        }
+
+        /* Conteúdo principal */
+        .produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            margin-top: 70px; /* Deixa espaço para a barra de navegação */
+        }
+
+        .produto {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer; /* Deixa claro que o card é clicável */
+            transition: transform 0.3s ease; /* Efeito de hover */
+        }
+
+        /* Hover do produto */
+        .produto:hover {
+            transform: scale(1.05); /* Efeito de zoom no card */
+        }
+
+        .produto img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .produto h3 {
+            color: #2a5934; /* verde escuro */
+            margin: 10px 0;
+        }
+
+        .produto p {
+            color: #555; /* cinza escuro */
+            margin: 5px 0;
+        }
+
+        .produto p.price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2a5934; /* verde escuro */
+            margin-top: 10px;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #8fbf9f; /* verde mais escuro para o rodapé */
+            color: #2a5934; /* verde escuro */
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Remove o sublinhado por padrão dos links */
+        .produto a {
+            text-decoration: none; /* Remover sublinhado do link */
+        }
+
+        /* Sublinha o link apenas quando o mouse passar */
+        .produto a:hover {
+            text-decoration: none; /* Remove o sublinhado do link ao passar o mouse */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Barra de navegação -->
+    <nav>
+        <!-- Logo à esquerda -->
+        <div class="logo">
+            TechStore
+        </div>
+
+        <!-- Menu central -->
+        <ul>
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Sobre Nós</a></li>
+            <li><a href="#">Entre em Contato</a></li>
+            <li><a href="#">Histórico de Evolução</a></li>
+            <li><a href="#">Login</a></li>
+        </ul>
+
+        <!-- Área de busca e carrinho à direita -->
+        <div class="nav-right">
+            <a href="#">Buscar</a>
+            <a href="#">Carrinho</a>
+        </div>
+    </nav>
+
+    <!-- Lista de produtos -->
+    <div class="produtos">
+        {% for produto in produtos %}
+        <div class="produto">
+            <a href="{% url 'produto_detalhes' produto_id=produto.id %}">
+            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                <h3>{{ produto.nome }}</h3>
+                <p>{{ produto.descricao }}</p>
+                <p class="price">R$ {{ produto.preco }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2024 Loja de Produtos - Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>
